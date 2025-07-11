@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Digital Clock - Multi Time Zone</title>
+  <style>
+    body { font-family: 'Courier New', Courier, monospace; background: #222; color: #fff; text-align: center; }
+    .clock-container { display: flex; justify-content: center; gap: 40px; margin-top: 60px; }
+    .clock { background: #333; padding: 20px 35px; border-radius: 12px; box-shadow: 0 4px 12px #0007; }
+    .zone { font-size: 1.2em; margin-bottom: 10px; color: #c4e3ff; }
+    .time { font-size: 2.2em; font-weight: bold; letter-spacing: 2px; }
+  </style>
+</head>
+<body>
+  <h1>Digital Clock - Multiple Time Zones</h1>
+  <div class="clock-container" id="clocks">
+    <!-- Clocks will be inserted here -->
+  </div>
+  <script>
+    // 定义你要显示的时区
+    const timeZones = [
+      { label: "Local", timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone },
+      { label: "New York", timeZone: "America/New_York" },
+      { label: "London", timeZone: "Europe/London" },
+      { label: "Tokyo", timeZone: "Asia/Tokyo" }
+    ];
+
+    // 渲染时钟面板
+    const clocksDiv = document.getElementById('clocks');
+    clocksDiv.innerHTML = timeZones.map((tz, i) =>
+      `<div class="clock" id="clock${i}">
+        <div class="zone">${tz.label}</div>
+        <div class="time" id="time${i}">--:--:--</div>
+      </div>`
+    ).join('');
+
+    // 更新时间
+    function updateClocks() {
+      const now = new Date();
+      timeZones.forEach((tz, i) => {
+        const formatter = new Intl.DateTimeFormat('en-US', {
+          hour: '2-digit', minute: '2-digit', second: '2-digit',
+          hour12: false, timeZone: tz.timeZone
+        });
+        document.getElementById('time'+i).textContent = formatter.format(now);
+      });
+    }
+    updateClocks();
+    setInterval(updateClocks, 1000);
+  </script>
+</body>
+</html>
